@@ -48,7 +48,41 @@ public class HomeWorkTests {
 
     }
 
+    @Test
+    public void SecondHomeWorkTest(){
+        waitElementAndClick(By.xpath("//android.widget.Button[@resource-id=\"org.wikipedia:id/fragment_onboarding_skip_button\"]"),
+                "Cannot find skip button",
+                15);
 
+        waitElementAndClick(By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Cannot find Wiki search element",
+                15);
+
+        waitElementAndSendKeys(By.xpath("//*[contains(@text,'Search Wikipedia')]"),
+                "Java",
+                "Cannot Find Element search input ",
+                15);
+        waitForElementPresent(By.xpath("//androidx.recyclerview.widget.RecyclerView[@resource-id='org.wikipedia:id/search_results_list']/android.view.ViewGroup[2]"),
+                "One or fewer articles found",
+                5);
+
+        waitElementAndClick(By.id("org.wikipedia:id/search_close_btn"),
+                        "Cannot find close button",
+                        5);
+
+        waitForElementNotPresent(By.xpath("//androidx.recyclerview.widget.RecyclerView[@resource-id='org.wikipedia:id/search_results_list']/android.view.ViewGroup[2]"),
+                "One or fewer articles found",
+                5);
+
+    }
+
+
+
+    private WebElement waitElementAndSendKeys(By by, String value, String errorMessage, long timeoutInSeconds) {
+        WebElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
+        element.sendKeys(value);
+        return element;
+    }
 
     private WebElement waitForElementPresent(By by, String errorMessage, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
@@ -56,6 +90,13 @@ public class HomeWorkTests {
         return wait.until(
                 ExpectedConditions.presenceOfElementLocated(by)
         );
+    }
+
+    private boolean waitForElementNotPresent(By by, String errorMessage, long timeoutInSeconds) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.withMessage(errorMessage + "\n");
+        return wait.until(
+                ExpectedConditions.invisibilityOfElementLocated(by));
     }
 
     private WebElement waitForElementPresent(By by, String errorMessage) {
